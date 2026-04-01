@@ -5,7 +5,7 @@ import connectDB from './connectDb/connectDb'
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT as string;
 
 const server = http.createServer(app);
 

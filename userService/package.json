@@ -5,11 +5,12 @@
     "dev": "nodemon --exec ts-node src/server.ts --watch src"
   },
   "dependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.13.17",
-    "nodemon": "^3.1.14",
-    "ts-node": "^10.9.2",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^16.4.7",
@@ -19,6 +20,8 @@
     "mongodb": "^7.1.1",
     "mongoose": "^9.3.3",
     "morgan": "^1.10.1",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
     "typescript": "^6.0.2"
   }
 }
