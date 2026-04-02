@@ -16,7 +16,6 @@ const register = TryCatch(async(req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     user = await User.create({name, email, password: hashPassword, role});
     
-    const expiry = (process.env['JWT_EXPIRY'] as '7d' | '1d' | '30d' | '1h' | '1m') || '7d';
     const token = jwt.sign({id: user._id}, process.env['JWT_SECRET'] as string, {expiresIn: "7d"});
 
     if(!token){
