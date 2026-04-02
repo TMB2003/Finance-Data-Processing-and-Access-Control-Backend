@@ -13,7 +13,7 @@ app.get("/", (_req, res) => {
 });
 
 /* 3️⃣ Routes AFTER CORS + OPTIONS */
-app.use("/api", router);
+app.use("/api/v1", router);
 
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
