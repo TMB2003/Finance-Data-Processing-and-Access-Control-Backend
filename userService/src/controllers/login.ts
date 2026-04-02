@@ -18,8 +18,7 @@ const login = TryCatch(async(req, res) => {
         return res.status(400).json({message: "Invalid password"});
     }
     
-    const expiry = process.env['JWT_EXPIRY'] as '7d' | '1d' | '30d' | '1h' | '1m';
-    const token = jwt.sign({id: user.email}, process.env['JWT_SECRET'] as string, {expiresIn: expiry});
+    const token = jwt.sign({id: user._id}, process.env['JWT_SECRET'] as string, {expiresIn: "7d"});
 
     res.cookie("token", token, {
         httpOnly: true,

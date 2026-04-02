@@ -5,7 +5,7 @@ declare global {
     namespace Express {
         interface Request {
             user?: {
-                email: string;
+                id: string;
             };
         }
     }
@@ -26,12 +26,12 @@ const useAuth = (req: Request, res: Response, next: NextFunction) => {
             return res.status(500).json({ message: "JWT secret not configured" });
         }
 
-        const decoded = jwt.verify(token, secret) as { email?: string };
-        if (!decoded.email) {
+        const decoded = jwt.verify(token, secret) as { id?: string };
+        if (!decoded.id) {
             return res.status(401).json({ message: "Invalid token" });
         }
 
-        req.user = { email: decoded.email };
+        req.user = { id: decoded.id };
         return next();
     } catch {
         return res.status(401).json({ message: "Invalid token" });

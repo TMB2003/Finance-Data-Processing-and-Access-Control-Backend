@@ -2,13 +2,9 @@ import { User } from "../models/userModel";
 import TryCatch from "../utils/tryCatch";
 
 const getProfile = TryCatch(async (req, res) => {
-    const userEmail = req.user?.email;
+    const userId = req.user?.id;
 
-    if (!userEmail) {
-        return res.status(401).json({ message: "Not authenticated" });
-    }
-
-    const user = await User.findOne({email: userEmail});
+    const user = await User.findById(userId);
     if (!user) {
         return res.status(404).json({ message: "User not found" });
     }
@@ -18,6 +14,7 @@ const getProfile = TryCatch(async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            isActive: user.isActive
         },
     });
 });

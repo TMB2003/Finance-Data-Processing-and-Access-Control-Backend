@@ -1,5 +1,13 @@
 import mongoose from 'mongoose';
 
+export interface IUser {
+    name: string;
+    email: string;
+    password: string;
+    role: 'admin' | 'viewer' | 'analyst';
+    isActive: boolean;
+}
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -19,6 +27,11 @@ const userSchema = new mongoose.Schema({
         enum: ['admin', 'viewer', 'analyst'],
         required: true,
         default: 'viewer'
+    },
+    isActive: {
+        type: Boolean,
+        required: true,
+        default: true
     }
 });
 
