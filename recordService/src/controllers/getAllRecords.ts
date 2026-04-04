@@ -7,8 +7,8 @@ const getAllRecords = TryCatch(async (req: Request, res: Response) => {
     const {
         type,
         category,
-        from,        // date range start  e.g. 2024-01-01
-        to,          // date range end    e.g. 2024-12-31
+        from,
+        to,
         limit = 10,
         page  = 1,
     } = req.query;
@@ -28,30 +28,46 @@ const getAllRecords = TryCatch(async (req: Request, res: Response) => {
         return res.status(400).json({ message: "invalid 'to' date format" });
     }
 
-    // build filters dynamically
-    const records = await sql_db`
+    // Build conditions array
+    const conditions: string[] = [];
+    const params: (string | number | Date)[] = [];
+    let paramIndex = 1;
+
+    if (type) {
+        conditions.push(`type = $${paramIndex++}`);
+        params.push(type as string);
+    }
+    if (category) {
+        conditions.push(`category = $${paramIndex++}`);
+        params.push(category as string);
+    }
+    if (from) {
+        conditions.push(`date >= $${paramIndex++}`);
+        params.push(new Date(from as string));
+    }
+    if (to) {
+        conditions.push(`date <= $${paramIndex++}`);
+        params.push(new Date(to as string));
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    // Get records
+    const records = await sql_db.unsafe(`
         SELECT *
         FROM records
-        WHERE
-            ${type     ? sql_db`type = ${type}`                                      : sql_db`TRUE`}
-        AND ${category ? sql_db`category = ${category}`                              : sql_db`TRUE`}
-        AND ${from     ? sql_db`date >= ${new Date(from as string)}`                 : sql_db`TRUE`}
-        AND ${to       ? sql_db`date <= ${new Date(to as string)}`                   : sql_db`TRUE`}
+        ${whereClause}
         ORDER BY date DESC
-        LIMIT  ${Number(limit)}
-        OFFSET ${offset}
-    `;
+        LIMIT $${paramIndex++}
+        OFFSET $${paramIndex++}
+    `, [...params, Number(limit), offset]);
 
-    // total count for pagination
-    const countResult = await sql_db`
+    // Get total count
+    const countResult = await sql_db.unsafe(`
         SELECT COUNT(*) as total
         FROM records
-        WHERE
-            ${type     ? sql_db`type = ${type}`                                      : sql_db`TRUE`}
-        AND ${category ? sql_db`category = ${category}`                              : sql_db`TRUE`}
-        AND ${from     ? sql_db`date >= ${new Date(from as string)}`                 : sql_db`TRUE`}
-        AND ${to       ? sql_db`date <= ${new Date(to as string)}`                   : sql_db`TRUE`}
-    `;
+        ${whereClause}
+    `, params);
 
     const total      = Number(countResult[0].total);
     const totalPages = Math.ceil(total / Number(limit));

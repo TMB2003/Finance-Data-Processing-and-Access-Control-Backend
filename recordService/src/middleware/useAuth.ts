@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const useAuth = (req: Request, res: Response, next: NextFunction) => {
 
@@ -23,6 +25,7 @@ export const useAuth = (req: Request, res: Response, next: NextFunction) => {
         next();
 
     } catch (err) {
+        console.error("JWT verification failed:", err);
         return res.status(401).json({ message: "Unauthorized: invalid or expired token" });
     }
 };
