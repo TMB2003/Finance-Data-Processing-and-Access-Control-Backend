@@ -19,13 +19,18 @@ const addRecord = TryCatch(async (req: Request, res: Response) => {
         return res.status(400).json({ message: "amount must be a positive number" });
     }
 
+    const userId = req.user?.id;
+    if (!userId) {
+        return res.status(401).json({ message: "Unauthorized: user not authenticated" });
+    }
+
     const record = await RecordRepository.create({
         amount: Number(amount),
         type,
         category,
         date: new Date(date),
         notes: notes ?? null,
-        created_by: req.user!.id,
+        created_by: userId,
     });
 
     return res.status(201).json({

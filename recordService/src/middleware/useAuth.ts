@@ -13,7 +13,7 @@ export const useAuth = (req: Request, res: Response, next: NextFunction) => {
         const decoded = verifyToken(token);
 
         req.user = {
-            id: decoded.id,
+            id: decoded._id,
             role: decoded.role,
         };
 

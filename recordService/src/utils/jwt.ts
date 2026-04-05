@@ -6,7 +6,7 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET!;
 
 export interface TokenPayload {
-    id: string;
+    _id: string;
     role: string;
 }
 export const verifyToken = (token: string): TokenPayload => {
