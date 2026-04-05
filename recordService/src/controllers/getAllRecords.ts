@@ -1,9 +1,9 @@
 import TryCatch from "../utils/tryCatch";
 import { Request, Response } from "express";
-import { sql_db } from "../config/connectDb";
+import { RecordRepository } from "../repositories/recordRepository";
+import { validateRecordType } from "../utils/validators";
 
 const getAllRecords = TryCatch(async (req: Request, res: Response) => {
-
     const {
         type,
         category,
@@ -16,7 +16,7 @@ const getAllRecords = TryCatch(async (req: Request, res: Response) => {
     const offset = (Number(page) - 1) * Number(limit);
 
     // validate type if provided
-    if (type && !["income", "expense"].includes(type as string)) {
+    if (type && !validateRecordType(type as string)) {
         return res.status(400).json({ message: "type must be 'income' or 'expense'" });
     }
 
@@ -28,48 +28,15 @@ const getAllRecords = TryCatch(async (req: Request, res: Response) => {
         return res.status(400).json({ message: "invalid 'to' date format" });
     }
 
-    // Build conditions array
-    const conditions: string[] = [];
-    const params: (string | number | Date)[] = [];
-    let paramIndex = 1;
+    const { records, total } = await RecordRepository.findAll({
+        type: type as string | undefined,
+        category: category as string | undefined,
+        from: from ? new Date(from as string) : undefined,
+        to: to ? new Date(to as string) : undefined,
+        limit: Number(limit),
+        offset,
+    });
 
-    if (type) {
-        conditions.push(`type = $${paramIndex++}`);
-        params.push(type as string);
-    }
-    if (category) {
-        conditions.push(`category = $${paramIndex++}`);
-        params.push(category as string);
-    }
-    if (from) {
-        conditions.push(`date >= $${paramIndex++}`);
-        params.push(new Date(from as string));
-    }
-    if (to) {
-        conditions.push(`date <= $${paramIndex++}`);
-        params.push(new Date(to as string));
-    }
-
-    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-
-    // Get records
-    const records = await sql_db.unsafe(`
-        SELECT *
-        FROM records
-        ${whereClause}
-        ORDER BY date DESC
-        LIMIT $${paramIndex++}
-        OFFSET $${paramIndex++}
-    `, [...params, Number(limit), offset]);
-
-    // Get total count
-    const countResult = await sql_db.unsafe(`
-        SELECT COUNT(*) as total
-        FROM records
-        ${whereClause}
-    `, params);
-
-    const total      = Number(countResult[0].total);
     const totalPages = Math.ceil(total / Number(limit));
 
     return res.status(200).json({
@@ -77,8 +44,8 @@ const getAllRecords = TryCatch(async (req: Request, res: Response) => {
         pagination: {
             total,
             totalPages,
-            currentPage : Number(page),
-            limit       : Number(limit),
+            currentPage: Number(page),
+            limit: Number(limit),
         },
         records,
     });

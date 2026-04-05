@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
+import { verifyToken } from "../utils/jwt";
 
 export const useAuth = (req: Request, res: Response, next: NextFunction) => {
 
@@ -12,13 +10,10 @@ export const useAuth = (req: Request, res: Response, next: NextFunction) => {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-            _id: string;
-            role: string;
-        };
+        const decoded = verifyToken(token);
 
         req.user = {
-            _id: decoded._id,
+            id: decoded.id,
             role: decoded.role,
         };
 
