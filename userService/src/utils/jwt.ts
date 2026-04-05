@@ -1,9 +1,12 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-const JWT_SECRET  = process.env.JWT_SECRET!;
+dotenv.config();
+
+const JWT_SECRET  = process.env["JWT_SECRET"]!;
 
 export interface TokenPayload {
-    id: string;
+    _id: string;
     role: string;
 }
 

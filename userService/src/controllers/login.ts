@@ -1,24 +1,13 @@
-import jwt from "jsonwebtoken";
-import { User } from "../models/userModel";
 import TryCatch from "../utils/tryCatch";
-import bcrypt from "bcrypt";
-import dotenv from "dotenv";
-dotenv.config();
+import { generateToken } from "../utils/jwt";
+import { verifyUser } from "../services/userServices";
 
 const login = TryCatch(async(req, res) => {
     const {email, password} = req.body;
-    let user = await User.findOne({email});
-
-    if(!user){
-        return res.status(400).json({message: "User not found"});
-    }
     
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if(!isPasswordValid){
-        return res.status(400).json({message: "Invalid password"});
-    }
+    const user = await verifyUser(email, password);
     
-    const token = jwt.sign({_id: user._id, role: user.role}, process.env['JWT_SECRET'] as string, {expiresIn: "7d"});
+    const token = generateToken({_id: user._id.toString(), role: user.role});
 
     res.cookie("token", token, {
         httpOnly: true,
