@@ -32,7 +32,7 @@ export const findUserById = async(_id: string) => {
 }
 
 export const updateUser = async (_id: string, updates: { isActive?: boolean }) => {
-    const user = await User.findByIdAndUpdate(_id, updates, { new: true });
+    const user = await User.findByIdAndUpdate(_id, updates, { returnDocument: 'after' });
     if (!user) throw new Error("User not found");
     return toUserWithoutPassword(user);
 };

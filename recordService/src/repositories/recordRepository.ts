@@ -1,21 +1,6 @@
 import { sql_db } from "../config/connectDb";
+import { RecordInput, RecordUpdateInput } from "../types/recordTypes";
 
-export interface RecordInput {
-    amount: number;
-    type: string;
-    category: string;
-    date: Date;
-    notes?: string | null;
-    created_by: string;
-}
-
-export interface RecordUpdateInput {
-    amount?: number;
-    type?: string;
-    category?: string;
-    date?: Date;
-    notes?: string | null;
-}
 
 export const RecordRepository = {
     async findById(id: string) {
