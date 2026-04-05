@@ -11,9 +11,9 @@ export const sql_neon = process.env["DATABASE_URL"]
 
 // Local PostgreSQL (for development)
 export const sql_db = postgres({
-  host: process.env["PGHOST"] || "localhost",
+  host: process.env["PGHOST"],
   port: parseInt(process.env["PGPORT"] || "5432"),
-  database: process.env["PGDATABASE"] || "records_db",
-  username: process.env["PGUSER"] || "taha",
-  password: process.env["PGPASSWORD"] || "",
+  database: process.env["PGDATABASE"],
+  username: process.env["PGUSER"],
+  password: process.env["PGPASSWORD"],
 });
