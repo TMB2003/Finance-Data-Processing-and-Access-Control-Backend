@@ -13,28 +13,27 @@ declare global {
 
 const useAuth = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({ message: "Not authenticated" });
+    if(!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({message: "Not Authenicated"});
     }
 
-    const token = authHeader.slice("Bearer ".length).trim();
+    const token = authHeader.split(" ")[1];
 
-    try {
+    try{
         const secret = process.env["JWT_SECRET"];
-        if (!secret) {
-            return res.status(500).json({ message: "JWT secret not configured" });
+        if(!secret){
+            return res.status(500).json({message: "JWT secret not configured"});
         }
 
-        const decoded = jwt.verify(token, secret) as { id?: string };
-        if (!decoded.id) {
-            return res.status(401).json({ message: "Invalid token" });
+        const decoded = jwt.verify(token, secret) as { _id?: string };
+        if(!decoded._id){
+            return res.status(401).json({message: "Invalid token"});
         }
 
-        req.user = { id: decoded.id };
+        req.user = { id: decoded._id };
         return next();
     } catch {
-        return res.status(401).json({ message: "Invalid token" });
+        return res.status(401).json({message: "Invalid token"});
     }
 };
 

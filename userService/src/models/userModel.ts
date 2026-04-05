@@ -1,13 +1,5 @@
 import mongoose from 'mongoose';
 
-export interface IUser {
-    name: string;
-    email: string;
-    password: string;
-    role: 'admin' | 'viewer' | 'analyst';
-    isActive: boolean;
-}
-
 const userSchema = new mongoose.Schema({
     name: {
         type: String,

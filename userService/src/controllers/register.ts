@@ -1,13 +1,14 @@
 import TryCatch from "../utils/tryCatch";
 import { generateToken } from "../utils/jwt";
 import { createUser } from "../services/userServices";
+import { userSchema } from "../types/userTypes";
 
 const register = TryCatch(async(req, res) => {
     const {name, email, password, role} = req.body;
     
-    const user = await createUser(name, email, password, role, true);
+    const user:userSchema = await createUser(name, email, password, role, true);
     
-    const token = generateToken({_id: user._id.toString(), role: user.role});
+    const token:string = generateToken(user);
 
     if(!token){
         return res.status(500).json({message: "Failed to generate token"});

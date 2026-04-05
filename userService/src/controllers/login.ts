@@ -1,13 +1,14 @@
 import TryCatch from "../utils/tryCatch";
 import { generateToken } from "../utils/jwt";
 import { verifyUser } from "../services/userServices";
+import { userSchema } from "../types/userTypes";
 
 const login = TryCatch(async(req, res) => {
     const {email, password} = req.body;
     
-    const user = await verifyUser(email, password);
-    
-    const token = generateToken({_id: user._id.toString(), role: user.role});
+    const user:userSchema = await verifyUser(email, password);
+
+    const token:string = generateToken(user);
 
     res.cookie("token", token, {
         httpOnly: true,
