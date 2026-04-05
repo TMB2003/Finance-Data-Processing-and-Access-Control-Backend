@@ -42,16 +42,16 @@ The system follows a microservices architecture with two independent services:
 - **Role Assignment**: Three distinct roles with hierarchical permissions
 - **User Status**: Active/Inactive status management
 
-**Roles Hierarchy:**
+**Roles:**
 ```
-Viewer (can view) → Analyst (can view + create) → Admin (full access)
+Viewer (read-only summary) → Analyst (view + read records) → Admin (full CRUD)
 ```
 
-| Role | View | Create | Update | Delete |
-|------|------|--------|--------|--------|
-| Viewer | ✅ | ❌ | ❌ | ❌ |
-| Analyst | ✅ | ✅ | ❌ | ❌ |
-| Admin | ✅ | ✅ | ✅ | ✅ |
+| Role | View Summary | List/Read Records | Create | Update | Delete |
+|------|-------------|-------------------|--------|--------|--------|
+| Viewer | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Analyst | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Admin | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ### 2. Financial Records Management
 Full CRUD operations for financial entries:
@@ -327,7 +327,7 @@ Authorization: Bearer <token>
 
 #### Records CRUD
 
-**POST** `/api/v1/` (Analyst/Admin only)
+**POST** `/api/v1/` (Admin only)
 ```json
 // Request
 {
@@ -346,12 +346,12 @@ Authorization: Bearer <token>
 }
 ```
 
-**GET** `/api/v1/records` (All roles)
+**GET** `/api/v1/records` (Analyst/Admin)
 ```
 Query params: ?type=income&category=Salary&from=2025-01-01&to=2025-12-31&page=1&limit=50
 ```
 
-**GET** `/api/v1/:id` (All roles)
+**GET** `/api/v1/:id` (Analyst/Admin)
 - Get single record by ID
 
 **PUT** `/api/v1/:id` (Admin only)

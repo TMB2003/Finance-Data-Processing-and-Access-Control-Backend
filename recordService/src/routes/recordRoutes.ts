@@ -13,12 +13,12 @@ const router = Router();
 // useAuth always runs first — then role guard decides access
 
 // viewer + analyst + admin
-router.get("/records",          useAuth, isViewer,  getAllRecords);
+router.get("/records",          useAuth, isAnalyst,  getAllRecords);
 router.get("/summary",   useAuth, isViewer,  getSummary);
-router.get("/:id",       useAuth, isViewer,  getRecord);
+router.get("/:id",       useAuth, isAnalyst,  getRecord);
 
 // analyst + admin
-router.post("/", useAuth, isAnalyst, addRecord);
+router.post("/", useAuth, isAdmin, addRecord);
 
 // admin only
 router.put("/:id", useAuth, isAdmin,   updateRecord);
