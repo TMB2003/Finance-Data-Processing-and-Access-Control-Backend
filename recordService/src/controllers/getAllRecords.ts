@@ -9,7 +9,7 @@ const getAllRecords = TryCatch(async (req: Request, res: Response) => {
         category,
         from,
         to,
-        limit = 10,
+        limit = 50,
         page  = 1,
     } = req.query;
 
