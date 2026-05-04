@@ -4,6 +4,8 @@ import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
+import { AddRecord } from './pages/AddRecord';
+import { Records } from './pages/Records';
 
 function App() {
   return (
@@ -17,6 +19,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/records"
+            element={
+              <ProtectedRoute>
+                <Records />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-record"
+            element={
+              <ProtectedRoute>
+                <AddRecord />
               </ProtectedRoute>
             }
           />

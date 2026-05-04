@@ -66,8 +66,24 @@ export const Dashboard: React.FC = () => {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-700">
-                Welcome, {user?.name} ({user?.role})
+                Welcome, {user?.name}
               </span>
+              {user?.role !== 'viewer' && (
+                <button
+                  onClick={() => navigate('/records')}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Records
+                </button>
+              )}
+              {user?.role === 'admin' && (
+                <button
+                  onClick={() => navigate('/add-record')}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  + Add Record
+                </button>
+              )}
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
@@ -89,20 +105,20 @@ export const Dashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <SummaryCard
                 title="Total Income"
-                value={`$${summary.totalIncome.toLocaleString()}`}
-                icon="�"
+                value={`₹${summary.totalIncome.toLocaleString()}`}
+                icon="💵"
                 color="green"
               />
               <SummaryCard
                 title="Total Expenses"
-                value={`$${summary.totalExpenses.toLocaleString()}`}
-                icon="�"
+                value={`₹${summary.totalExpenses.toLocaleString()}`}
+                icon="📉"
                 color="red"
               />
               <SummaryCard
                 title="Net Balance"
-                value={`$${summary.netBalance.toLocaleString()}`}
-                icon="�"
+                value={`₹${summary.netBalance.toLocaleString()}`}
+                icon="💰"
                 color="blue"
               />
             </div>
@@ -175,7 +191,7 @@ const CategoryColumn: React.FC<{ title: string; type: 'income' | 'expense'; cate
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
         <span className={`text-lg font-bold ${isIncome ? 'text-green-600' : 'text-red-600'}`}>
-          ${total.toLocaleString()}
+          ₹{total.toLocaleString()}
         </span>
       </div>
       <div className="space-y-3">
@@ -183,7 +199,7 @@ const CategoryColumn: React.FC<{ title: string; type: 'income' | 'expense'; cate
           <div key={`${cat.category}-${cat.type}`} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <p className="font-medium text-gray-900">{cat.category}</p>
             <p className={`font-semibold ${isIncome ? 'text-green-600' : 'text-red-600'}`}>
-              ${Number(cat.total).toLocaleString()}
+              ₹{Number(cat.total).toLocaleString()}
             </p>
           </div>
         ))}
@@ -203,8 +219,8 @@ const TrendItem: React.FC<{ trend: Trend }> = ({ trend }) => {
     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
       <p className="font-medium text-gray-900">{formatPeriod(trend.period)}</p>
       <div className="flex gap-6">
-        <span className="text-green-600 font-medium">+${trend.income.toLocaleString()}</span>
-        <span className="text-red-600 font-medium">-${trend.expense.toLocaleString()}</span>
+        <span className="text-green-600 font-medium">+₹{trend.income.toLocaleString()}</span>
+        <span className="text-red-600 font-medium">-₹{trend.expense.toLocaleString()}</span>
       </div>
     </div>
   );

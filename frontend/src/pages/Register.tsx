@@ -131,7 +131,7 @@ export const Register: React.FC = () => {
           >
             {USER_ROLES.map((r) => (
               <option key={r} value={r}>
-                {r}
+                {r.charAt(0).toUpperCase() + r.slice(1)}
               </option>
             ))}
           </select>

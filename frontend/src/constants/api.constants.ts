@@ -18,7 +18,7 @@ export const API_ENDPOINTS = {
   },
 } as const;
 
-export const USER_ROLES = ['Viewer', 'Analyst', 'Admin'] as const;
+export const USER_ROLES = ['viewer', 'analyst', 'admin'] as const;
 export const CATEGORIES = ['Income', 'Expense', 'Investment', 'Savings'] as const;
 
 export const VALIDATION = {
