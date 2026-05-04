@@ -36,7 +36,6 @@ const getSummary = TryCatch(async (req: Request, res: Response) => {
             totalExpenses,
             netBalance,
             categoryTotals,
-            recentActivity,
             trends: Object.values(trendsMap),
         },
     });
